@@ -15,13 +15,23 @@ class nginx::install {
         require => Group['www']
     }
 
+    file { "${nginx::params::log_path}":
+        ensure => directory,
+        owner => 'www',
+        group => 'www',
+        mode  => '0644',
+    }
+
     #
     # Install Nginx
     #
 
     exec { 'wget-nginx':
-        cwd     => '/usr/local/src',
-        command => 'wget http://nginx.org/download/nginx-1.5.8.tar.gz'
+        cwd         => '/usr/local/src',
+        command     => 'wget http://nginx.org/download/nginx-1.5.8.tar.gz',
+        onlyif      => "test -f /usr/local/src/nginx-1.5.8.tar.gz != 0",
+        logoutput   => on_failure,
+        timeout     => 0,
     }
 
     exec { 'build-nginx':

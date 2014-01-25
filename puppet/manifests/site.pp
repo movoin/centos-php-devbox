@@ -24,5 +24,5 @@ File {
 }
 
 include baseconfig
-include nginx
+#include nginx
 include mysql
