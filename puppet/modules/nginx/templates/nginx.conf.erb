@@ -1,0 +1,63 @@
+user www www;
+worker_processes 2;
+
+error_log <%= scope.lookupvar("nginx::params::log_path") %>/error_nginx.log crit;
+pid /var/run/nginx.pid;
+worker_rlimit_nofile 1024;
+
+events {
+    use epoll;
+    worker_connections 1024;
+}
+
+http {
+    include mime.types;
+    default_type application/octet-stream;
+    server_names_hash_bucket_size 128;
+    client_header_buffer_size 32k;
+    large_client_header_buffers 4 32k;
+    client_max_body_size 8m;
+    sendfile on;
+    tcp_nopush on;
+    keepalive_timeout 120;
+    server_tokens off;
+    tcp_nodelay on;
+
+    fastcgi_connect_timeout 300;
+    fastcgi_send_timeout 300;
+    fastcgi_read_timeout 300;
+    fastcgi_buffer_size 64k;
+    fastcgi_buffers 4 64k;
+    fastcgi_busy_buffers_size 128k;
+    fastcgi_temp_file_write_size 256k;
+
+    gzip on;
+    gzip_disable "msie6";
+    gzip_vary on;
+    gzip_comp_level 2;
+    gzip_min_length 1k;
+    gzip_buffers 4 16k;
+    gzip_http_version 1.1;
+    gzip_types text/plain application/x-javascript text/css application/xml;
+
+    server {
+        listen 80;
+        server_name _;
+        access_log <%= scope.lookupvar("nginx::params::log_path") %>/access_nginx.log combined;
+        root <%= scope.lookupvar("nginx::params::www_path") %>;
+        index index.html index.php;
+
+        if ( $query_string ~* ".*[\;'\<\>].*" ){
+            return 404;
+        }
+
+        location ~ .*\.(php|php5)?$  {
+            #fastcgi_pass remote_php_ip:9000;
+            fastcgi_pass unix:/dev/shm/php-cgi.sock;
+            fastcgi_index index.php;
+            include fastcgi.conf;
+        }
+    }
+
+    include sites-enabled/*.conf;
+}
