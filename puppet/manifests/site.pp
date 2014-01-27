@@ -58,7 +58,7 @@ include php
 # include php::extends
 
 # # Install `pthreads` Extension
-# php::extends::install { "pthreads":
+# php::extends::install { "pthreads-0.0.45":
 #     name      => "pthreads",
-#     version   => "
+#     version   => "0.0.45"
 # }
