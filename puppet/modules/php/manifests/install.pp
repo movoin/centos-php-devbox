@@ -12,7 +12,7 @@ class php::install {
         before      => Exec["export phpbin"]
     }
 
-    exec { "export-phpbin":
-        command     => "echo 'export PATH=$PATH:${php::params::install_path}/bin' >> /etc/profile && . /etc/profile",
+    exec { "export phpbin":
+        command     => "echo 'export PATH=\$PATH:${php::params::install_path}/bin' >> /etc/profile",
     }
 }

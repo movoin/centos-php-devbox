@@ -21,14 +21,10 @@ class php::config {
 
     file { "/etc/init.d/php-fpm":
         source  => "/tmp/php-5.5.7/sapi/fpm/init.d.php-fpm",
-        mode => 0755,
+        mode => "0755",
         ensure => "present",
         owner => "root",
         group => "root",
-        require => Class["php::install"],
-    }
-
-    exec { "echo 'export PATH=$PATH:${php::params::install_path}/bin' >> /etc/profile":
         require => Class["php::install"],
     }
 
