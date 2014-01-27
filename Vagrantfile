@@ -4,7 +4,6 @@
 #
 # Vagrant Config
 #
-vmName   = "[CentOS]LNMP-via-Puppet"
 box      = "lnmp-via-puppet"
 url      = "file:///E:/vagrant/res/centos-6.5-x86_64-mini.box"
 hostname = "lnmp"
@@ -23,7 +22,6 @@ Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox do |vb|
     vb.customize [
       "modifyvm", :id,
-      "--name", vmName,
       "--memory", memory,
       "--cpus", cpus,
       "--hwvirtex", "on",

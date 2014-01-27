@@ -8,9 +8,9 @@
 
 ## LNMP 环境
 
-- Nginx 1.5.8
-- MySQL 5.6.15
-- PHP 5.5.7
+- Nginx 1.5.8 ( /usr/local/nginx )
+- MySQL 5.5.35 (二进制)
+- PHP 5.5.7 ( /usr/local/php )
 
 ## PHP 扩展
 

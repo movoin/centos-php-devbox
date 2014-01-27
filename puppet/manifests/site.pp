@@ -1,9 +1,9 @@
-stage { 'pre':
-  before => Stage['main']
+stage { "pre":
+    before => Stage["main"]
 }
 
-class { 'baseconfig':
-  stage => 'pre'
+class { "base":
+    stage => "pre"
 }
 
 Exec {
@@ -18,11 +18,47 @@ Exec {
 }
 
 File {
-  owner => 'root',
-  group => 'root',
-  mode  => '0644',
+    owner => "root",
+    group => "root",
+    mode  => "0644",
 }
 
-include baseconfig
-#include nginx
+#
+# Base Config
+#
+
+include base
+
+#
+# Install MySQL (via `mysql-5.5.35-linux2.6-x86_64`)
+#
+# Because the compiler installed too slow, and I also didn"t find
+# compiler installed can offer me any substantial improvement.
+#
+
 include mysql
+
+#
+# Install Nginx
+#
+
+include nginx
+include nginx::config
+
+# Add VHost -> [ dexter.devbox.com ]
+nginx::config::vhost { "dexter.devbox.com":
+    domain => "dexter.devbox.com",
+}
+
+#
+# Install PHP 5.4
+#
+
+include php
+# include php::extends
+
+# # Install `pthreads` Extension
+# php::extends::install { "pthreads":
+#     name      => "pthreads",
+#     version   => "
+# }

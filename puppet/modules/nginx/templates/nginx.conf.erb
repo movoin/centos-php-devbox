@@ -1,5 +1,5 @@
 user www www;
-worker_processes 2;
+worker_processes <%= @cpunumber %>;
 
 error_log <%= scope.lookupvar("nginx::params::log_path") %>/error_nginx.log crit;
 pid /var/run/nginx.pid;

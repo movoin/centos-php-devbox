@@ -1,14 +1,13 @@
 class nginx {
 
-    include nginx::params
-    include nginx::pcre
+    include nginx::prepare
     include nginx::install
-    include nginx::setup
-    include nginx::server
+    include nginx::config
 
-    Class["nginx::pcre"] ->
-    Class["nginx::install"] ->
-    Class["nginx::setup"] ->
-    Class["nginx::server"]
+    nginx::config::init { "install":
+        cpunumber => $processorcount,
+    }
+
+    include nginx::server
 
 }

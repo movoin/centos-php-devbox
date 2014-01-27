@@ -1,20 +1,19 @@
 class nginx::server {
 
-    include nginx::params
-
-    #
-    # Run Nginx Server
-    #
+    file { "/etc/init.d/nginx":
+        source      => "puppet:///modules/nginx/Nginx-init",
+        mode        => "0755",
+        ensure      => "present",
+        require     => File[ "${nginx::params::install_path}/conf/nginx.conf" ],
+        before      => Service["nginx"]
+    }
 
     service { "nginx":
-        ensure => running,
-        hasrestart => true
-    } ->
-    file { "${nginx::params::www_path}/index.html":
-        owner => 'www',
-        group => 'www',
-        mode  => '0644',
-        source => 'puppet:///modules/nginx/index.html',
-        require => Service["nginx"]
+        ensure      => running,
+        enable      => true,
+        hasrestart  => true,
+        hasstatus   => true,
+        subscribe   => [ Class[nginx::install], Class[nginx::prepare], Class[nginx::config] ],
     }
+
 }

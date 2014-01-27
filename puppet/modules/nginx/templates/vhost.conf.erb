@@ -1,8 +1,10 @@
 server {
     listen 80;
-    server_name _;
-    access_log /home/wwwlogs/access.log combined;
-    root /home/wwwroot/default;
+    server_name <%= @domain %>;
+    access_log <%= scope.lookupvar("nginx::params::log_path") %>/<%= @domain %>-access.log combined;
+    error_log <%= scope.lookupvar("nginx::params::log_path") %>/<%= @domain %>-error.log;
+    root <%= scope.lookupvar("nginx::params::www_path") %>/<%= @domain %>;
+
     index index.html index.php;
 
     if ( $query_string ~* ".*[\;'\<\>].*" ){
@@ -10,9 +12,9 @@ server {
     }
 
     location ~ .*\.(php|php5)?$  {
-        #fastcgi_pass remote_php_ip:9000;
+        include fastcgi_params;
         fastcgi_pass unix:/dev/shm/php-cgi.sock;
         fastcgi_index index.php;
-        include fastcgi.conf;
+        fastcgi_param SCRIPT_FILENAME <%= scope.lookupvar("nginx::params::www_path") %>/<%= @domain %>$fastcgi_script_name;
     }
 }
